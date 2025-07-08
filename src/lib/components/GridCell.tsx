@@ -1,5 +1,8 @@
 import React from 'react';
-import { AstralObject, MegaverseObject } from '../types';
+import { 
+  AstralObject, 
+  MegaverseObject 
+} from '../types';
 
 interface GridCellProps {
   row: number;

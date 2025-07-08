@@ -1,4 +1,9 @@
-import { MegaverseMap, AstralObject, MegaverseObject, parseGoalString } from '../types';
+import { 
+  MegaverseMap, 
+  AstralObject, 
+  MegaverseObject, 
+  parseGoalString 
+} from '../types';
 
 export const getGoalObject = (goalMap: any, row: number, col: number): MegaverseObject | null => {
   if (!goalMap?.goal || !goalMap.goal[row] || !goalMap.goal[row][col]) {

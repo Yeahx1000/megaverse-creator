@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { 
+  useState, 
+  useEffect 
+} from 'react';
 import './App.css';
 import { 
   deletePolyanet,
@@ -14,7 +17,11 @@ import {
   updateCurrentMap,
   getGridDimensions,
 } from './lib/utils';
-import { MegaverseMap, AstralObject, MegaverseObject } from './lib/types';
+import { 
+  MegaverseMap, 
+  AstralObject, 
+  MegaverseObject 
+} from './lib/types';
 import Modal from './lib/components/Modal';
 import Grid from './lib/components/Grid';
 import GridLegend from './lib/components/GridLegend';
