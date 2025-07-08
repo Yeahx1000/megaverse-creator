@@ -28,7 +28,7 @@ button {
   font-size: 14px;
   font-weight: bold;
   cursor: pointer;
-  transition: opacity 0.2s;
+  transition: all 0.2s ease;
 }
 
 button:disabled {
@@ -36,24 +36,40 @@ button:disabled {
   cursor: not-allowed;
 }
 
+button:hover:not(:disabled) {
+  /* Color changes only - no scaling or movement */
+}
+
 .btn-create {
-  background: #4ecdc4;
-  color: white;
+  background: #04C768;
+  color: #F9FAFA;
+}
+
+.btn-create:hover:not(:disabled) {
+  background: #03A857;
 }
 
 .btn-delete {
-  background: #ff6b6b;
-  color: white;
+  background: #58626B;
+  color: #F9FAFA;
+}
+
+.btn-delete:hover:not(:disabled) {
+  background: #4A5359;
 }
 
 .btn-refresh {
-  background: #45b7d1;
-  color: white;
+  background: #86DFEA;
+  color: #091825;
+}
+
+.btn-refresh:hover:not(:disabled) {
+  background: #6BC8D8;
 }
 
 .btn-pause {
-  background-color: #ffa500;
-  color: white;
+  background-color: #86DFEA;
+  color: #091825;
   border: none;
   padding: 10px 20px;
   margin: 5px;
@@ -62,14 +78,17 @@ button:disabled {
   font-size: 14px;
 }
 
-.btn-pause:hover {
-  background-color: #ff8c00;
+.btn-pause:hover:not(:disabled) {
+  background-color: #6BC8D8;
 }
 
 .grid-container {
   margin: 20px auto;
   max-width: 90vw;
   overflow-x: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .grid-container h3 {
@@ -84,6 +103,7 @@ button:disabled {
   padding: 15px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   min-width: fit-content;
+  max-width: 100%;
 }
 
 .grid-row {
@@ -108,54 +128,29 @@ button:disabled {
   font-size: 18px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   flex-shrink: 0;
-  transition: all 0.3s ease;
+  transition: background 0.3s ease;
 }
 
 .grid-cell:hover {
   background: rgba(255, 255, 255, 0.2);
-  transform: scale(1.1);
 }
 
 .grid-cell.astral-goal {
   background: rgba(255, 193, 7, 0.3);
-  border: 2px solid #ffc107;
-  animation: pulse 2s infinite;
+  border: 1px solid #ffc107;
 }
 
 .grid-cell.astral-current {
   background: rgba(78, 205, 196, 0.3);
-  border: 2px solid #4ecdc4;
+  border: 1px solid #4ecdc4;
 }
 
 .grid-cell.astral-complete {
   background: rgba(76, 175, 80, 0.3);
-  border: 2px solid #4caf50;
-  animation: completePulse 2s infinite;
+  border: 1px solid #4caf50;
 }
 
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.7);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(255, 193, 7, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(255, 193, 7, 0);
-  }
-}
 
-@keyframes completePulse {
-  0% {
-    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
-  }
-  70% {
-    box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
-  }
-}
 
 .maps-info {
   display: flex;
@@ -190,6 +185,22 @@ button:disabled {
   color: #e0e0e0;
   max-height: 300px;
   overflow-y: auto;
+}
+
+@media (max-width: 1024px) {
+  .grid-cell {
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+  }
+  
+  .grid {
+    padding: 12px;
+  }
+  
+  .grid-container {
+    max-width: 92vw;
+  }
 }
 
 @media (max-width: 768px) {
@@ -261,6 +272,10 @@ button:disabled {
     padding: 5px;
   }
   
+  .grid-container {
+    max-width: 98vw;
+  }
+  
   .legend-item {
     font-size: 11px;
   }
@@ -270,8 +285,106 @@ button:disabled {
   }
 }
 
+@media (max-width: 360px) {
+  .grid-cell {
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+  }
+  
+  .grid {
+    padding: 3px;
+  }
+  
+  .grid-container {
+    max-width: 100vw;
+  }
+  
+  .grid-row {
+    gap: 1px;
+  }
+  
+  .legend-item {
+    font-size: 10px;
+    padding: 2px 4px;
+  }
+  
+  .legend-icon {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .modal-content {
+    padding: 12px;
+    max-width: 95vw;
+    max-height: 95vh;
+  }
+  
+  .modal-content .grid-cell {
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+    min-width: 18px;
+    min-height: 18px;
+  }
+  
+  .modal-content .grid {
+    padding: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 8px;
+    max-width: 98vw;
+    max-height: 98vh;
+  }
+  
+  .modal-content .grid-cell {
+    width: 15px;
+    height: 15px;
+    font-size: 9px;
+    min-width: 15px;
+    min-height: 15px;
+  }
+  
+  .modal-content .grid {
+    padding: 4px;
+  }
+  
+  .modal-content .grid-row {
+    gap: 1px;
+  }
+}
+
+@media (max-width: 360px) {
+  .modal-content {
+    padding: 6px;
+    max-width: 100vw;
+    max-height: 100vh;
+  }
+  
+  .modal-content .grid-cell {
+    width: 12px;
+    height: 12px;
+    font-size: 8px;
+    min-width: 12px;
+    min-height: 12px;
+  }
+  
+  .modal-content .grid {
+    padding: 2px;
+  }
+  
+  .modal-content .grid-row {
+    gap: 1px;
+  }
+}
+
 .grid-legend {
-  margin-top: 15px;
+  margin: 0 auto 15px;
+  width: fit-content;
   display: flex;
   justify-content: center;
   gap: 20px;
@@ -337,6 +450,27 @@ button:disabled {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.modal-content .grid {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.modal-content .grid-cell {
+  min-width: 20px;
+  min-height: 20px;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+}
+
+.modal-content .grid {
+  padding: 8px;
+}
+
+.modal-content .grid-row {
+  gap: 1px;
+}
+
 .modal-close {
   position: absolute;
   top: 10px;
@@ -361,8 +495,12 @@ button:disabled {
 }
 
 .btn-info {
-  background: #7e57c2;
-  color: white;
+  background: #04C768;
+  color: #F9FAFA;
+}
+
+.btn-info:hover:not(:disabled) {
+  background: #03A857;
 }
 
 /* SOLoon colors */

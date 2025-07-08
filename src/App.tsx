@@ -22,10 +22,10 @@ import ProgressBar from './lib/components/ProgressBar';
 import GridControls from './lib/components/GridControls';
 
 // Split code into smaller components for modularity and maintainability
-// TODO: match to brand theme
 // TODO: optimize for speed
 // TODO: add tests
 // TODO: add more error handling
+// TODO: show current map in modal
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -234,7 +234,8 @@ function App() {
 
       {rows > 0 && cols > 0 ? (
         <div className="grid-container">
-          <h3>Interactive Grid ({rows}x{cols})</h3>
+          {/* <h3>Interactive Grid ({rows}x{cols})</h3> */}
+          <GridLegend />
           <Grid
             rows={rows}
             cols={cols}
@@ -244,7 +245,6 @@ function App() {
             getCurrentValue={getCurrentValueWrapper}
             onCellClick={handleCellClick}
           />
-          <GridLegend />
         </div>
       ) : (
         <div className="loading-container">
@@ -265,7 +265,6 @@ function App() {
             isGoal={true}
           />
         )}
-        <GridLegend isGoal={true} />
       </Modal>
     </div>
   );
