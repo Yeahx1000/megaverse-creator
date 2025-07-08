@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 
+// nothing to see here, just the entry point
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );

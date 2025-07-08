@@ -29,7 +29,6 @@ export interface MegaverseMap {
   objects: MegaverseObject[];
 }
 
-// Helper function to parse goal map strings
 export const parseGoalString = (str: string): MegaverseObject | null => {
   if (str === 'SPACE' || !str) return null;
 
@@ -55,3 +54,9 @@ export const parseGoalString = (str: string): MegaverseObject | null => {
 
   return null;
 };
+
+export interface AstralObjectOperation {
+  row: number;
+  column: number;
+  object: MegaverseObject;
+}

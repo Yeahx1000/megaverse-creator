@@ -4,21 +4,22 @@ interface GridLegendProps {
   isGoal?: boolean;
 }
 
+// just for displaying below grid, to see what's what
 const GridLegend: React.FC<GridLegendProps> = ({ isGoal = false }) => {
   if (isGoal) {
     return (
       <div className="grid-legend">
         <div className="legend-item">
           <span className="legend-icon">⭐</span>
-          <span>Goal Polyanet</span>
+          <span>Polyanet</span>
         </div>
         <div className="legend-item">
           <span className="legend-icon">⚪</span>
-          <span>Goal Soloon</span>
+          <span>Soloon</span>
         </div>
         <div className="legend-item">
           <span className="legend-icon">☄️</span>
-          <span>Goal Cometh</span>
+          <span>Cometh</span>
         </div>
         <div className="legend-item">
           <span className="legend-icon">🌌</span>

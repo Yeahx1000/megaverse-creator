@@ -1,20 +1,25 @@
-import { AstralObject, MegaverseMap, Direction, SoloonColor, MegaverseObject } from '../types';
+import { 
+    AstralObject, 
+    MegaverseMap,
+    Direction, 
+    SoloonColor, 
+    MegaverseObject, 
+    AstralObjectOperation 
+} from '../types';
 
-// Ensure we have the correct base URL and candidate ID
+// better to keep these in .env, but for now this is fine
 const candidateId = process.env.REACT_APP_CANDIDATE_ID || '7abc33b8-3155-4684-9645-90406ac44173';
 const baseUrl = process.env.REACT_APP_BASE_URL || 'http://challenge.crossmint.com/api';
 
 // Kept running into CORS issues, so I added some delay and retry logic
-// Configuration - More conservative settings to avoid CORS issues
-const BATCH_SIZE = 5; // Reduced batch size
-const MAX_RETRIES = 5; // Increased retries
-const RETRY_DELAY = 2000; // Increased delay between retries
-const BATCH_DELAY = 5000; // Increased delay between batches
+// Kept hitting CORS issues, so I added some delay and retry logic
+const BATCH_SIZE = 5;
+const MAX_RETRIES = 5; 
+const RETRY_DELAY = 2000; // between retries
+const BATCH_DELAY = 5000; // between batches
 const INITIAL_DELAY = 1000; // Initial delay before starting
 
-console.log('Environment variables:', { candidateId, baseUrl });
-
-// Initialize an empty map with given dimensions
+// creating empty map with given dimensions
 export const createEmptyMap = (rows: number, cols: number): MegaverseMap => {
     return {
         map: Array(rows).fill(null).map(() => Array(cols).fill(null)),
@@ -22,10 +27,10 @@ export const createEmptyMap = (rows: number, cols: number): MegaverseMap => {
     };
 };
 
-// Helper function to delay execution
+// Helper func to delay execution
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-// Helper function to retry failed requests with exponential backoff
+// Helper function to retry failed requests, trying to avoid CORS issues
 const retryRequest = async (operation: () => Promise<any>, retries = MAX_RETRIES): Promise<any> => {
     try {
         return await operation();
@@ -47,10 +52,8 @@ const retryRequest = async (operation: () => Promise<any>, retries = MAX_RETRIES
     }
 };
 
-// Create a Polyanet
 const createPolyanet = async (row: number, column: number): Promise<void> => {
     await retryRequest(async () => {
-        console.log(`Creating Polyanet at (${row}, ${column})`);
         const response = await fetch(`${baseUrl}/polyanets`, {
             method: 'POST',
             headers: {
@@ -70,10 +73,8 @@ const createPolyanet = async (row: number, column: number): Promise<void> => {
     });
 };
 
-// Create a Soloon
 const createSoloon = async (row: number, column: number, color: SoloonColor): Promise<void> => {
     await retryRequest(async () => {
-        console.log(`Creating ${color} Soloon at (${row}, ${column})`);
         const response = await fetch(`${baseUrl}/soloons`, {
             method: 'POST',
             headers: {
@@ -94,10 +95,8 @@ const createSoloon = async (row: number, column: number, color: SoloonColor): Pr
     });
 };
 
-// Create a Cometh
 const createCometh = async (row: number, column: number, direction: Direction): Promise<void> => {
     await retryRequest(async () => {
-        console.log(`Creating ${direction} Cometh at (${row}, ${column})`);
         const response = await fetch(`${baseUrl}/comeths`, {
             method: 'POST',
             headers: {
@@ -118,7 +117,6 @@ const createCometh = async (row: number, column: number, direction: Direction): 
     });
 };
 
-// Delete operations with retry logic
 const deletePolyanet = async (row: number, column: number): Promise<void> => {
     await retryRequest(async () => {
         const response = await fetch(`${baseUrl}/polyanets`, {
@@ -179,15 +177,8 @@ const deleteCometh = async (row: number, column: number): Promise<void> => {
     });
 };
 
-// Batch creation of astral objects
-interface AstralObjectOperation {
-    row: number;
-    column: number;
-    object: MegaverseObject;
-}
-
 const processBatch = async (operations: AstralObjectOperation[]): Promise<void> => {
-    // Process operations sequentially within a batch to avoid overwhelming the server
+    // Process operations one after another in a batch to avoid overwhelming the server
     for (const { row, column, object } of operations) {
         switch (object.type) {
             case 'POLYANET':
@@ -205,7 +196,7 @@ const processBatch = async (operations: AstralObjectOperation[]): Promise<void> 
     }
 };
 
-// Process all operations in batches
+// more batching logic
 const processOperationsInBatches = async (
     operations: AstralObjectOperation[],
     onProgress?: (completed: number, total: number) => void
@@ -213,7 +204,7 @@ const processOperationsInBatches = async (
     const total = operations.length;
     let completed = 0;
 
-    // Initial delay before starting
+    // Initial delay before starting, trying to avoid rate limiting
     await delay(INITIAL_DELAY);
 
     for (let i = 0; i < operations.length; i += BATCH_SIZE) {
@@ -228,7 +219,6 @@ const processOperationsInBatches = async (
     }
 };
 
-// Create any astral object based on type and properties
 const createAstralObject = async (row: number, column: number, object: MegaverseObject): Promise<void> => {
     if ('type' in object) {
         switch (object.type) {
@@ -245,7 +235,6 @@ const createAstralObject = async (row: number, column: number, object: Megaverse
     throw new Error('Invalid astral object');
 };
 
-// Delete any astral object based on type
 const deleteAstralObject = async (row: number, column: number, type: AstralObject): Promise<void> => {
     switch (type) {
         case 'POLYANET':
@@ -255,18 +244,15 @@ const deleteAstralObject = async (row: number, column: number, type: AstralObjec
         case 'COMETH':
             return deleteCometh(row, column);
         case 'SPACE':
-            return; // Nothing to delete for SPACE
+            return; 
     }
 };
 
-// Fetch the goal map
 const fetchGoalMap = async (): Promise<any> => {
     return retryRequest(async () => {
         const url = `${baseUrl}/map/${candidateId}/goal`;
-        console.log('Fetching goal map from:', url);
         
         const response = await fetch(url);
-        console.log('Response status:', response.status);
         
         if (!response.ok) {
             const errorText = await response.text();
@@ -274,26 +260,21 @@ const fetchGoalMap = async (): Promise<any> => {
         }
         
         const data = await response.json();
-        console.log('Goal map data:', data);
         return data;
     });
 };
 
-// Fetch the current map state
 const fetchCurrentMap = async (): Promise<any> => {
     return retryRequest(async () => {
         const url = `${baseUrl}/map/${candidateId}`;
-        console.log('Fetching current map from:', url);
         
         const response = await fetch(url);
-        console.log('Response status:', response.status);
         
         if (!response.ok) {
             throw new Error(`Failed to fetch current map: ${response.status} ${response.statusText}`);
         }
         
         const data = await response.json();
-        console.log('Current map data:', data);
         return data;
     });
 };
@@ -312,5 +293,4 @@ export {
     processOperationsInBatches,
 };
 
-// Re-export grid utilities
 export * from './gridUtils';

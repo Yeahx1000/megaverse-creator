@@ -22,11 +22,10 @@ import ProgressBar from './lib/components/ProgressBar';
 import GridControls from './lib/components/GridControls';
 
 // Split code into smaller components for modularity and maintainability
-// TODO: remove API endpoints from public repo
 // TODO: match to brand theme
 // TODO: optimize for speed
 // TODO: add tests
-// TODO: add error handling logging and security
+// TODO: add more error handling
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -37,20 +36,16 @@ function App() {
   const [isPaused, setIsPaused] = useState(false);
   const [progress, setProgress] = useState({ completed: 0, total: 0 });
 
-  // Initialize grid based on goal data
+  // dynamically generate grid size based on goal data
   useEffect(() => {
     const initializeGrid = async () => {
       try {
-        console.log('Initializing grid...');
         const goalData = await fetchGoalMap();
-        console.log('Goal data received:', goalData);
         setGoalMap(goalData);
         
         if (goalData?.goal) {
           const { rows, cols } = getGridDimensions(goalData);
-          console.log(`Creating grid with dimensions: ${rows}x${cols}`);
           
-          // Initialize current map
           setCurrentMap(createEmptyMap(rows, cols));
           
           setMessage(`Grid initialized: ${rows}x${cols}`);
@@ -89,7 +84,6 @@ function App() {
     setMessage('Preparing goal pattern operations...');
     
     try {
-      // Collect all operations first
       const operations: { row: number; column: number; object: MegaverseObject }[] = [];
       for (let row = 0; row < goalMap.goal.length; row++) {
         for (let col = 0; col < goalMap.goal[row].length; col++) {
@@ -142,7 +136,7 @@ function App() {
       const mapContent = currentMapData.map.content;
       const objectsToDelete = [];
 
-      // Collect positions where objects exist (type: 0)
+      // check current map, collect positions where objects exist (usingtype: 0)
       for (let row = 0; row < mapContent.length; row++) {
         for (let col = 0; col < mapContent[row].length; col++) {
           if (mapContent[row][col]?.type === 0) {
@@ -151,7 +145,7 @@ function App() {
         }
       }
 
-      // Process deletions in batches of 10
+      // delete in batches of 10, avoid rate limiting
       const batchSize = 10;
       const totalObjects = objectsToDelete.length;
       let deletedCount = 0;
@@ -161,14 +155,14 @@ function App() {
       for (let i = 0; i < objectsToDelete.length; i += batchSize) {
         const batch = objectsToDelete.slice(i, i + batchSize);
         
-        // Try to delete as POLYanet first (most common)
+        // Try to delete as POLYanet first
         await Promise.all(batch.map(obj => 
           deletePolyanet(obj.row, obj.col)
             .catch(() => {
-              // If not a POLYanet, try as SOLoon
+              // then SOLoon
               return deleteSoloon(obj.row, obj.col)
                 .catch(() => {
-                  // If not a SOLoon, try as comETH
+                  // then comETH
                   return deleteCometh(obj.row, obj.col)
                     .catch(() => {/* Ignore if all attempts fail */});
                 });
@@ -178,7 +172,7 @@ function App() {
         deletedCount += batch.length;
         setMessage(`Deleting objects... ${deletedCount}/${totalObjects}`);
 
-        // Small delay between batches to avoid rate limiting
+        // trying to avoid rate limiting, delay between batches
         if (i + batchSize < objectsToDelete.length) {
           await new Promise(resolve => setTimeout(resolve, 100));
         }

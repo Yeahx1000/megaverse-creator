@@ -5,6 +5,7 @@ interface ProgressBarProps {
   total: number;
 }
 
+// updating large amounts of data is a bit slow right now, so I added a progress bar for user to see it's doing something
 const ProgressBar: React.FC<ProgressBarProps> = ({ completed, total }) => {
   if (total === 0) return null;
 

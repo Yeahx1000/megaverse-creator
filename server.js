@@ -1,3 +1,5 @@
+// proxy server to avoid CORS issues, ended up not using this, can be deleted honestly, but might play with it later
+
 const express = require('express');
 const fetch = require('node-fetch');
 const app = express();

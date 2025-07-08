@@ -1,6 +1,5 @@
 import { MegaverseMap, AstralObject, MegaverseObject, parseGoalString } from '../types';
 
-// Get the goal value for a specific position
 export const getGoalObject = (goalMap: any, row: number, col: number): MegaverseObject | null => {
   if (!goalMap?.goal || !goalMap.goal[row] || !goalMap.goal[row][col]) {
     return null;
@@ -8,7 +7,7 @@ export const getGoalObject = (goalMap: any, row: number, col: number): Megaverse
   return parseGoalString(goalMap.goal[row][col]);
 };
 
-// Get the current value for a specific position
+// current val for a position
 export const getCurrentValue = (currentMap: MegaverseMap | null, row: number, col: number): AstralObject => {
   if (!currentMap?.map || !currentMap.map[row] || currentMap.map[row][col] === null) {
     return 'SPACE';
@@ -16,7 +15,6 @@ export const getCurrentValue = (currentMap: MegaverseMap | null, row: number, co
   return currentMap.map[row][col] as AstralObject;
 };
 
-// Update the current map state
 export const updateCurrentMap = (currentMap: MegaverseMap | null, row: number, col: number, value: AstralObject | null): MegaverseMap | null => {
   if (!currentMap) return null;
   
@@ -30,7 +28,7 @@ export const updateCurrentMap = (currentMap: MegaverseMap | null, row: number, c
   };
 };
 
-// figuring out grid dimensions on load
+// figuring out grid size on load
 export const getGridDimensions = (goalMap: any) => {
   if (!goalMap?.goal) return { rows: 0, cols: 0 };
   return {

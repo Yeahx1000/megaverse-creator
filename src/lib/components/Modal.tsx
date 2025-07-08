@@ -6,6 +6,7 @@ interface ModalProps {
   children: React.ReactNode;
 }
 
+// Modal being used to display goal map, can be used for other things, mostly just want to tuck away the goal map
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
 
