@@ -21,12 +21,15 @@ import GridLegend from './lib/components/GridLegend';
 import ProgressBar from './lib/components/ProgressBar';
 import GridControls from './lib/components/GridControls';
 
-// Split code into smaller components for modularity and maintainability
+/* 
+- NOTE: this is a more frontend heavy solution, 
+using a proxy server could help but this is what I ended up with for now
+*/
+
 // TODO: optimize for speed
 // TODO: add tests
 // TODO: add more error handling
 // TODO: show current map in modal
-
 function App() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
